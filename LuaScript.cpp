@@ -1,5 +1,12 @@
 #include "LuaScript.h"
 
+/**
+ * Create a lua script with the file containing the actual script
+ *
+ * @param filename		The name of the file to load in
+ *
+ * @param luaScript		The loaded script or NULL if the script fails to init
+ **/
 LuaScript* LuaScript::create(const std::string& filename) {
    LuaScript* luaScript = new LuaScript();
    if(luaScript->init(filename))
@@ -16,6 +23,13 @@ LuaScript::~LuaScript() {
 	if(L) lua_close(L);
 }
 
+/**
+ * Load in a lua script into the object
+ *
+ * @param filename		the name of the file to load in
+ *
+ * @param success or failure
+ **/
 bool LuaScript::init(const std::string& filename)
 {
 	L = luaL_newstate();
@@ -26,14 +40,26 @@ bool LuaScript::init(const std::string& filename)
     }
 
     if(L) luaL_openlibs(L);
+
+	this->filename = filename;
 	return true;
 }
 
+/**
+ * Print an error message to the console
+ *
+ * @param variableName	the variable attempted to be accessed
+ * @param reason		the reason for the failure
+ **/
 void LuaScript::printError(const std::string& variableName, const std::string& reason) {
 	std::cout<<"Error: can't get ["<<variableName<<"]. "<<reason<<std::endl;
 }
 
 /**
+ * Call a function from Lua with no return. First arg
+ * must be the function to be called
+ *
+ * Format for argdesc:
  * i = int
  * d = double
  * f = float
@@ -78,10 +104,15 @@ void LuaScript::lua_voidfunc(char* argdesc, ...)
 	if(lua_pcall(L, numarg_list-1, 0, 0) != 0)
 	   printf( "error running function `%s': %s", funcname, lua_tostring(L, -1));
 
-  lua_pop(L,1);
+ // lua_pop(L,1);
+  clean();
 }
 
 /**
+ * Call a function from Lua that returns a double. First arg
+ * must be the function to be called
+ *
+ * Format for argdesc:
  * i = int
  * d = double
  * f = float
@@ -144,6 +175,10 @@ double LuaScript::lua_doublefunc(char* argdesc, ...)
 }
 
 /**
+ * Call a function from Lua that returns an int. First arg
+ * must be the function to be called
+ *
+ * Format for argdesc:
  * i = int
  * d = double
  * f = float
@@ -206,6 +241,10 @@ int LuaScript::lua_intfunc(char* argdesc, ...)
 }
 
 /**
+ * Call a function from Lua that returns a string. First arg
+ * must be the function to be called
+ *
+ * Format for argdesc:
  * i = int
  * d = double
  * f = float
@@ -268,6 +307,10 @@ std::string LuaScript::lua_stringfunc(char* argdesc, ...)
 }
 
 /**
+ * Call a function from Lua that returns a bool. First arg
+ * must be the function to be called
+ *
+ * Format for argdesc:
  * i = int
  * d = double
  * f = float
@@ -329,6 +372,13 @@ bool LuaScript::lua_boolfunc(char* argdesc, ...)
 	return result;
 }
 
+/**
+ * Get a vector of ints from the lua script
+ *
+ * @param name	the name of the vector
+ *
+ * @return v	the values of the int vector
+ **/
 std::vector<int> LuaScript::getIntVector(const std::string& name) {
     std::vector<int> v;
     lua_gettostack(name.c_str());
@@ -344,6 +394,13 @@ std::vector<int> LuaScript::getIntVector(const std::string& name) {
     return v;
 }
 
+/**
+ * Get all the keys of a table in the lua script
+ *
+ * @param name		the name of the table
+ *
+ * @return strings	the keys in the table
+ **/
 std::vector<std::string> LuaScript::getTableKeys(const std::string& name) {
     std::string code = 
         "function getKeys(name) "

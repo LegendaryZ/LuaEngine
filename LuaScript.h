@@ -7,6 +7,9 @@
 #include <lua.hpp>
 #include <stdarg.h>
 
+/**
+ * Manages a single LuaScript
+ **/
 class LuaScript {
 public:
 
@@ -23,11 +26,21 @@ public:
 	std::string lua_stringfunc(char* argdesc, ...);
 	bool lua_boolfunc(char* argdesc, ...);
 
+	/**
+	 * Clean the stack
+	 **/
     inline void clean() {
       int n = lua_gettop(L);
       lua_pop(L, n);
     }
 
+	/**
+	 * Get a variable out of the Lua Script
+	 *
+	 * @param variableName		the name of the variable to be accessed
+	 *
+	 * @return T	The value of the variable
+	 **/
     template<typename T>
     T get(const std::string& variableName) {
       if(!L) {
@@ -47,6 +60,9 @@ public:
       return result;
     }
 
+	/**
+	 * put the variable on top of the stack
+	 **/
     bool lua_gettostack(const std::string& variableName) {
       level = 0;
       std::string var = "";
@@ -82,12 +98,17 @@ public:
         return true;       
     }
 		
-    // Generic get
+    /**
+	 * Generic get
+	 **/
     template<typename T>
     T lua_get(const std::string& variableName) {
       return 0;
     }
 
+	/**
+	 * Failure case get
+	 **/
     template<typename T>
     T lua_getdefault() {
       return 0;
