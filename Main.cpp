@@ -1,8 +1,4 @@
-#include "Lua\include\lua.hpp"
-#include "Lua\include\lauxlib.h"
-#include "Lua\include\lualib.h"
-#include "Lua\include\luaconf.h"
-
+#include "LuaScript.h"
 #include <iostream>
 using namespace std;
 
@@ -17,7 +13,9 @@ extern "C" {
 
 int main()
 {
+	printf("===============================================================\n");
   cout << "** Test Lua embedding" << endl;
+  printf("===============================================================\n\n");
   cout << "** Init Lua" << endl;
   lua_State *L;
   L = luaL_newstate();
@@ -69,7 +67,43 @@ int main()
   cout << "** Release the Lua enviroment" << endl;
   lua_close(L);
   
-  printf("\n");
+  printf("\n===============================================================\n");
+  printf("Test LuaScript\n");
+  printf("===============================================================\n\n");
+
+  LuaScript* luaScript = LuaScript::create("player.lua");
+  if(luaScript)
+  {
+	float posX = luaScript->get<float>("player.position.x");
+    float posY = luaScript->get<float>("player.position.y");
+    std::string filename = luaScript->get<std::string>("player.filename");
+    int hp = luaScript->get<int>("player.HP");
+
+    std::cout<<"Position X = "<<posX<<", Y = "<<posY<<std::endl;
+    std::cout<<"Filename:"<<filename<<std::endl;
+    std::cout<<"HP:"<<hp<<std::endl;
+
+    // getting arrays
+    std::vector<int> v = luaScript->getIntVector("array");
+    std::cout<<"Contents of array:";
+    for(std::vector<int>::iterator it = v.begin();
+            it != v.end();
+            it++) {
+            std::cout<<*it<<",";
+    }
+    std::cout<<std::endl;
+
+    // getting table keys:
+    std::vector<std::string> keys = luaScript->getTableKeys("player");
+    std::cout<<"Keys of [player] table:";
+    for(std::vector<std::string>::iterator it = keys.begin();
+            it != keys.end();
+            it++) {
+            std::cout<<*it<<",";
+    }
+  }
+  
+  printf("\n\n");
   system("PAUSE");
   return 0;
 }
