@@ -1,5 +1,7 @@
 #include "LuaScript.h"
 #include <iostream>
+#include <string>
+#include <stdarg.h>
 using namespace std;
 
 extern "C" {
@@ -101,8 +103,14 @@ int main()
             it++) {
             std::cout<<*it<<",";
     }
+
+	printf("\n\nCalling Lua Functions from C++:\n");
+	luaScript->lua_voidfunc("ss", "printHelloWorld", "Hello World!");
+
+	std::string testString = luaScript->lua_stringfunc("si", "myluafunction", 5);
+	std::cout << testString << std::endl;
   }
-  
+
   printf("\n\n");
   system("PAUSE");
   return 0;

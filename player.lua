@@ -7,3 +7,11 @@ player = {
 }
 
 array = {1, 1, 2, 3, 5, 10, 20}
+
+function myluafunction(times)
+  return string.rep("(-)", times)
+end
+
+function printHelloWorld(s)
+	print(s)
+end

@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <lua.hpp>
+#include <stdarg.h>
 
 class LuaScript {
 public:
@@ -16,6 +17,12 @@ public:
     std::vector<int> LuaScript::getIntVector(const std::string& name);
     std::vector<std::string> LuaScript::getTableKeys(const std::string& name);
     
+	void lua_voidfunc(char* argdesc, ...);
+	double lua_doublefunc(char* argdesc, ...);
+	int lua_intfunc(char* argdesc, ...);
+	std::string lua_stringfunc(char* argdesc, ...);
+	bool lua_boolfunc(char* argdesc, ...);
+
     inline void clean() {
       int n = lua_gettop(L);
       lua_pop(L, n);
@@ -74,7 +81,7 @@ public:
 
         return true;       
     }
-
+		
     // Generic get
     template<typename T>
     T lua_get(const std::string& variableName) {

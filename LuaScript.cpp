@@ -33,6 +33,302 @@ void LuaScript::printError(const std::string& variableName, const std::string& r
 	std::cout<<"Error: can't get ["<<variableName<<"]. "<<reason<<std::endl;
 }
 
+/**
+ * i = int
+ * d = double
+ * f = float
+ * b = bool
+ * s = char*
+ **/
+void LuaScript::lua_voidfunc(char* argdesc, ...)
+{
+	va_list arg_list;
+	int numarg_list = strlen(argdesc);
+	if(numarg_list < 1 || argdesc[0] != 's')
+		return;
+
+	va_start(arg_list, argdesc);
+
+	char* funcname = va_arg(arg_list, char*);
+	lua_getglobal(L, funcname);
+ 
+	for(int i = 1; i < numarg_list; i++)
+	{
+		switch(argdesc[i])
+		{
+		case 'i':
+			lua_pushnumber(L, va_arg(arg_list, int));
+			break;
+		case 'd':
+			lua_pushnumber(L, va_arg(arg_list, double));
+			break;
+		case 'f':
+			lua_pushnumber(L, va_arg(arg_list, float));
+			break;
+		case 'b':
+			lua_pushboolean(L, va_arg(arg_list, bool));
+			break;
+		case 's':
+			lua_pushstring(L, va_arg(arg_list, char*));
+			break;
+		}
+	}
+	va_end(arg_list);
+ 
+	if(lua_pcall(L, numarg_list-1, 0, 0) != 0)
+	   printf( "error running function `%s': %s", funcname, lua_tostring(L, -1));
+
+  lua_pop(L,1);
+}
+
+/**
+ * i = int
+ * d = double
+ * f = float
+ * b = bool
+ * s = char*
+ **/
+double LuaScript::lua_doublefunc(char* argdesc, ...)
+{
+	va_list arg_list;
+	int numarg_list = strlen(argdesc);
+	if(numarg_list < 1 || argdesc[0] != 's')
+		return 0;
+
+	va_start(arg_list, argdesc);
+
+	char* funcname = va_arg(arg_list, char*);
+	lua_getglobal(L, funcname);
+ 
+	for(int i = 1; i < numarg_list; i++)
+	{
+		switch(argdesc[i])
+		{
+		case 'i':
+			lua_pushnumber(L, va_arg(arg_list, int));
+			break;
+		case 'd':
+			lua_pushnumber(L, va_arg(arg_list, double));
+			break;
+		case 'f':
+			lua_pushnumber(L, va_arg(arg_list, float));
+			break;
+		case 'b':
+			lua_pushboolean(L, va_arg(arg_list, bool));
+			break;
+		case 's':
+			lua_pushstring(L, va_arg(arg_list, char*));
+			break;
+		}
+	}
+	va_end(arg_list);
+ 
+	if(lua_pcall(L, numarg_list-1, 1, 0) != 0)
+	{
+	   printf( "error running function `%s': %s", funcname, lua_tostring(L, -1));
+	   lua_pop(L, 1);
+	   return 0;
+	}
+
+	if(!lua_isnumber(L, -1))
+	{
+		printf("function '%s' does not return a double", funcname);
+		lua_pop(L, 1);
+		return 0;
+	}
+
+	double result = lua_tonumber(L, -1);
+	lua_pop(L,1);
+
+	return result;
+}
+
+/**
+ * i = int
+ * d = double
+ * f = float
+ * b = bool
+ * s = char*
+ **/
+int LuaScript::lua_intfunc(char* argdesc, ...)
+{
+	va_list arg_list;
+	int numarg_list = strlen(argdesc);
+	if(numarg_list < 1 || argdesc[0] != 's')
+		return 0;
+
+	va_start(arg_list, argdesc);
+
+	char* funcname = va_arg(arg_list, char*);
+	lua_getglobal(L, funcname);
+ 
+	for(int i = 1; i < numarg_list; i++)
+	{
+		switch(argdesc[i])
+		{
+		case 'i':
+			lua_pushnumber(L, va_arg(arg_list, int));
+			break;
+		case 'd':
+			lua_pushnumber(L, va_arg(arg_list, double));
+			break;
+		case 'f':
+			lua_pushnumber(L, va_arg(arg_list, float));
+			break;
+		case 'b':
+			lua_pushboolean(L, va_arg(arg_list, bool));
+			break;
+		case 's':
+			lua_pushstring(L, va_arg(arg_list, char*));
+			break;
+		}
+	}
+	va_end(arg_list);
+ 
+	if(lua_pcall(L, numarg_list-1, 1, 0) != 0)
+	{
+	   printf( "error running function `%s': %s", funcname, lua_tostring(L, -1));
+	   lua_pop(L, 1);
+	   return 0;
+	}
+
+	if(!lua_isnumber(L, -1))
+	{
+		printf("function '%s' does not return a int", funcname);
+		lua_pop(L, 1);
+		return 0;
+	}
+
+	int result = (int)lua_tonumber(L, -1);
+	lua_pop(L,1);
+
+	return result;
+}
+
+/**
+ * i = int
+ * d = double
+ * f = float
+ * b = bool
+ * s = char*
+ **/
+std::string LuaScript::lua_stringfunc(char* argdesc, ...)
+{
+	va_list arg_list;
+	int numarg_list = strlen(argdesc);
+	if(numarg_list < 1 || argdesc[0] != 's')
+		return 0;
+
+	va_start(arg_list, argdesc);
+
+	char* funcname = va_arg(arg_list, char*);
+	lua_getglobal(L, funcname);
+ 
+	for(int i = 1; i < numarg_list; i++)
+	{
+		switch(argdesc[i])
+		{
+		case 'i':
+			lua_pushnumber(L, va_arg(arg_list, int));
+			break;
+		case 'd':
+			lua_pushnumber(L, va_arg(arg_list, double));
+			break;
+		case 'f':
+			lua_pushnumber(L, va_arg(arg_list, float));
+			break;
+		case 'b':
+			lua_pushboolean(L, va_arg(arg_list, bool));
+			break;
+		case 's':
+			lua_pushstring(L, va_arg(arg_list, char*));
+			break;
+		}
+	}
+	va_end(arg_list);
+ 
+	if(lua_pcall(L, numarg_list-1, 1, 0) != 0)
+	{
+	   printf( "error running function `%s': %s", funcname, lua_tostring(L, -1));
+	   lua_pop(L, 1);
+	   return 0;
+	}
+
+	if(!lua_isstring(L, -1))
+	{
+		printf("function '%s' does not return a double", funcname);
+		lua_pop(L, 1);
+		return 0;
+	}
+
+	std::string result = lua_tostring(L, -1);
+	lua_pop(L,1);
+
+	return result;
+}
+
+/**
+ * i = int
+ * d = double
+ * f = float
+ * b = bool
+ * s = char*
+ **/
+bool LuaScript::lua_boolfunc(char* argdesc, ...)
+{
+	va_list arg_list;
+	int numarg_list = strlen(argdesc);
+	if(numarg_list < 1 || argdesc[0] != 's')
+		return 0;
+
+	va_start(arg_list, argdesc);
+
+	char* funcname = va_arg(arg_list, char*);
+	lua_getglobal(L, funcname);
+ 
+	for(int i = 1; i < numarg_list; i++)
+	{
+		switch(argdesc[i])
+		{
+		case 'i':
+			lua_pushnumber(L, va_arg(arg_list, int));
+			break;
+		case 'd':
+			lua_pushnumber(L, va_arg(arg_list, double));
+			break;
+		case 'f':
+			lua_pushnumber(L, va_arg(arg_list, float));
+			break;
+		case 'b':
+			lua_pushboolean(L, va_arg(arg_list, bool));
+			break;
+		case 's':
+			lua_pushstring(L, va_arg(arg_list, char*));
+			break;
+		}
+	}
+	va_end(arg_list);
+ 
+	if(lua_pcall(L, numarg_list-1, 1, 0) != 0)
+	{
+	   printf( "error running function `%s': %s", funcname, lua_tostring(L, -1));
+	   lua_pop(L, 1);
+	   return 0;
+	}
+
+	if(!lua_isboolean(L, -1))
+	{
+		printf("function '%s' does not return a double", funcname);
+		lua_pop(L, 1);
+		return 0;
+	}
+
+	bool result = lua_toboolean(L, -1);
+	lua_pop(L,1);
+
+	return result;
+}
+
 std::vector<int> LuaScript::getIntVector(const std::string& name) {
     std::vector<int> v;
     lua_gettostack(name.c_str());
