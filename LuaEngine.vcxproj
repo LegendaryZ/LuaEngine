@@ -90,12 +90,14 @@
     <ClCompile Include="src\LuaScript.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\ScriptManager.cpp" />
+    <ClCompile Include="src\ThreadManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helper.h" />
     <ClInclude Include="src\Helper.h" />
     <ClInclude Include="src\LuaScript.h" />
     <ClInclude Include="src\ScriptManager.h" />
+    <ClInclude Include="src\ThreadManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -24,7 +24,7 @@ count = 0;
 function update()
 	print("update player")
 	count = count + 1;
-	if count >= 5 then
+	if count >= 5000 then
 		kill("player"); 
 	end
 end

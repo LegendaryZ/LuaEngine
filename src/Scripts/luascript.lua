@@ -24,7 +24,7 @@ count = 0;
 function update()
 	print("update luascript")
 	count = count+1;
-	if count >= 3 then
+	if count >= 5000 then
 		kill("luascript"); 
 	end
 end

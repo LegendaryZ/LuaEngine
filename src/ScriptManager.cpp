@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <map>
+#include <thread>
 #include <tchar.h>
 #include "Helper.h"
 #include "LuaScript.h"
@@ -95,6 +96,18 @@ void ScriptManager::getFilesInDir(const char* d, vector<string> & f)
 
 	delete[] wtext;
 }
+
+/**
+ * Run a script using an infinite loop
+ * NOTE: NEVER CALL THIS FROM THE MAIN THREAD
+ **/
+void ScriptManager::runScript(LuaScript* script)
+{
+	script->lua_voidfunc("s", "init");
+	while(script->getStatus() != LuaScript::Status::Dead)
+		script->lua_voidfunc("s", "update");
+}
+
 
 /**
  * Get a particular script out of the map

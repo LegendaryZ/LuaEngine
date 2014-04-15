@@ -24,6 +24,7 @@ public:
 	bool hasScript(std::string& scriptName);
 
 	map<string, LuaScript*>& getScripts();
+	void static runScript(LuaScript* script);
 private:
 	map<string, LuaScript*> scripts;
 
@@ -34,7 +35,7 @@ private:
 #endif /*SCRIPTMANAGER_H*/
 
 extern "C" {
-  static int l_killScript(lua_State *L) {
+  static inline int l_killScript(lua_State *L) {
 
 	  const char *filename = NULL;
 	  size_t filenameLength = 0; //Lua strings have an explicit length; they can contain null characters.

@@ -1,5 +1,6 @@
 #include "LuaScript.h"
 #include "ScriptManager.h"
+#include "ThreadManager.h"
 #include "Helper.h"
 #include <iostream>
 #include <string>
@@ -7,7 +8,6 @@
 
 
 using namespace std;
-
 
 /**
  * Test the player script
@@ -63,39 +63,11 @@ int main()
 	
 	map<string, LuaScript*>::iterator scriptItr = ScriptManager::getInstance()->getScripts().begin();
 
-	//Init all scripts
+	//Run all scripts
 	for(scriptItr; scriptItr != ScriptManager::getInstance()->getScripts().end(); scriptItr++)
-		scriptItr->second->lua_voidfunc("s", "init");
+		ThreadManager::getInstance()->registerThread(scriptItr->second);
 
-	bool quit = false;
-	int count = 0;
-	while(!quit)
-	{
-		printf("\n %d \n", ++count);
-		if(ScriptManager::getInstance()->getScript(std::string("player")))
-		{
-			ScriptManager::getInstance()->getScript(std::string("player"))->lua_voidfunc("s", "update");
-			if(ScriptManager::getInstance()->getScript(std::string("player"))->getStatus()  == LuaScript::Status::Dead)
-				ScriptManager::getInstance()->unloadScript(std::string("player"));
-		}
 
-		if(ScriptManager::getInstance()->getScript(std::string("luascript")))
-		{
-			ScriptManager::getInstance()->getScript(std::string("luascript"))->lua_voidfunc("s", "update");
-			if(ScriptManager::getInstance()->getScript(std::string("luascript"))->getStatus()  == LuaScript::Status::Dead)
-				ScriptManager::getInstance()->unloadScript(std::string("luascript"));
-		}
-
-		if(ScriptManager::getInstance()->getScripts().size() == 0)
-			quit = true;
-	}
-	/*
-	testPlayerScript();
-
-	printf("\n\nDeleting 'player'...\n");
-	ScriptManager::getInstance()->unloadScript(string("player"));
-	testPlayerScript();
-	*/
 	printf("\n\n");
 	system("PAUSE");
 	return 0;

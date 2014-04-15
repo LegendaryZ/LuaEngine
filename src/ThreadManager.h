@@ -4,27 +4,30 @@
 #include <iostream>
 #include <stdarg.h>
 #include <thread>
-#include <list>
+#include <vector>
+#include <string>
+#include "LuaScript.h"
 
 using namespace std;
 
 class ThreadManager
 {
 public:
-	ThreadManager(void);
+	static ThreadManager* getInstance();
 	~ThreadManager(void);
-	
-	//methods
-	void testMethod();
-	void testMethod2(int val);
-	void test();
-	void registerThread();
+
+	//methods	
+	void registerThread(LuaScript* script);
+	void runThreads();
+	void test(int val);
+	static void threadContent(LuaScript* script);
 
 	//variables
-	std::list<thread> threads;
-	int testVar;
-	int testVar2;
-	int testVar3;
-	int testVar4;
-};
+	int testVal;
 
+private:
+	//variables
+	vector<std::thread> threads;	
+
+	ThreadManager(void);
+};
