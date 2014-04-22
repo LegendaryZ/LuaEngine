@@ -1,29 +1,23 @@
-#pragma once
+#ifndef THREADMANAGER_H
+#define THREADMANAGER_H
 
-#include <string>
-#include <iostream>
-#include <stdarg.h>
 #include <thread>
 #include <vector>
-#include <string>
-#include "LuaScript.h"
+#include <functional>
 
 using namespace std;
 
+/**
+ * Responsible for thread management. Carries out background 
+ * tasks and main operations.
+ **/
 class ThreadManager
 {
 public:
 	static ThreadManager* getInstance();
 	~ThreadManager(void);
 
-	//methods	
-	void registerThread(LuaScript* script);
-	void runThreads();
-	void test(int val);
-	static void threadContent(LuaScript* script);
-
-	//variables
-	int testVal;
+	void asyncTask(std::function<void (void)> f);
 
 private:
 	//variables
@@ -31,3 +25,5 @@ private:
 
 	ThreadManager(void);
 };
+
+#endif /*THREADMANAGER_H*/

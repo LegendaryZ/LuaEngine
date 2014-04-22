@@ -87,13 +87,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="src\LuaScript.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\ScriptManager.cpp" />
     <ClCompile Include="src\ThreadManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Helper.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="src\Helper.h" />
     <ClInclude Include="src\LuaScript.h" />
     <ClInclude Include="src\ScriptManager.h" />

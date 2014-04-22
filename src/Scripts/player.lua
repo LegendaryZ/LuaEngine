@@ -7,6 +7,8 @@ player = {
 }
 
 array = {1, 1, 2, 3, 5, 10, 20}
+inv = {"sword", "sheild", "quiver"}
+boolArray = {true, false, true, true}
 
 function myluafunction(times)
   return string.rep("(-)", times)

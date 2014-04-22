@@ -1,4 +1,7 @@
 #include "LuaScript.h"
+#include "ThreadManager.h"
+#include <functional>
+
 
 /**
  * Create a lua script with the file containing the actual script
@@ -388,28 +391,6 @@ bool LuaScript::lua_boolfunc(char* argdesc, ...)
 }
 
 /**
- * Get a vector of ints from the lua script
- *
- * @param name	the name of the vector
- *
- * @return v	the values of the int vector
- **/
-std::vector<int> LuaScript::getIntVector(const std::string& name) {
-    std::vector<int> v;
-    lua_gettostack(name.c_str());
-    if(lua_isnil(L, -1)) { // array is not found
-        return std::vector<int>();
-    }
-    lua_pushnil(L);
-    while(lua_next(L, -2)) { 
-        v.push_back((int)lua_tonumber(L, -1));
-        lua_pop(L, 1);
-    }
-    clean();
-    return v;
-}
-
-/**
  * Get all the keys of a table in the lua script
  *
  * @param name		the name of the table
@@ -445,4 +426,14 @@ std::vector<std::string> LuaScript::getTableKeys(const std::string& name) {
     }
     clean();
     return strings;
+}
+
+void LuaScript::infiniteRun()
+{
+	auto f = [this](){
+	lua_voidfunc("s", "init");
+	while(status != Dead)
+		lua_voidfunc("s", "update");
+	};
+	ThreadManager::getInstance()->asyncTask(f);
 }

@@ -1,5 +1,8 @@
 #include "ThreadManager.h"
-#include "ScriptManager.h"
+
+/**
+ * Singleton accessor/constructor
+ **/
 ThreadManager* ThreadManager::getInstance()
 {
 	static ThreadManager* threadManager;
@@ -9,57 +12,18 @@ ThreadManager* ThreadManager::getInstance()
 }
 
 ThreadManager::ThreadManager(void)
-{
-
-}
-
+{}
 
 ThreadManager::~ThreadManager(void)
+{}
+
+/**
+ * Launches a task to be carried out in the background
+ *
+ * @param f		the lambda function to be carried out
+ **/
+void ThreadManager::asyncTask(std::function<void (void)> f)
 {
-}
-
-
-void ThreadManager::registerThread(LuaScript* script)
-{	
-	threads.push_back(thread(ThreadManager::threadContent, script));
-}
-
-void ThreadManager::threadContent(LuaScript* script)
-{
-	ScriptManager::runScript(script);
-}
-
-void ThreadManager::runThreads()
-{
-	//iterator
-	vector<std::thread>::iterator target=threads.begin();
-
-	//counter
-	int count=0;
-
-	//thread count
-	cout<<"Threads created: "<<ThreadManager::testVal<<endl;
-
-	//start threads (join)
-	for(target;target!=threads.end();target++)
-	{
-	if(target->joinable())
-	{
-	cout<<"Thread "<<++count<<" started"<<endl;
-	}
-	else
-	{
-	cout<<"Thread "<<++count<<" not started"<<endl;
-	}
-	}
-
-
-}
-
-void ThreadManager::test(int val)
-{
-cout<<val<<endl;
-//ThreadManager::testVal++;
-//cout<<"Test Value: "<<ThreadManager::testVal<<endl;
-
+	thread task(f);
+	task.detach();
 }

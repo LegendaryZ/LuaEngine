@@ -7,6 +7,7 @@
 #include <tchar.h>
 #include "Helper.h"
 #include "LuaScript.h"
+#include "ThreadManager.h"
 
 /**
  * Singleton Constructor/Accessor
@@ -103,9 +104,7 @@ void ScriptManager::getFilesInDir(const char* d, vector<string> & f)
  **/
 void ScriptManager::runScript(LuaScript* script)
 {
-	script->lua_voidfunc("s", "init");
-	while(script->getStatus() != LuaScript::Status::Dead)
-		script->lua_voidfunc("s", "update");
+	script->infiniteRun();
 }
 
 

@@ -21,11 +21,12 @@ public:
 	};
 
 	static LuaScript* create(const std::string& filename);
-
     ~LuaScript();
+
+
     void printError(const std::string& variableName, const std::string& reason);
-    std::vector<int> LuaScript::getIntVector(const std::string& name);
-    std::vector<std::string> LuaScript::getTableKeys(const std::string& name);
+    
+    std::vector<std::string> getTableKeys(const std::string& name);
     
 	void registercfunc(lua_CFunction f, std::string luaFuncName);
 
@@ -47,6 +48,32 @@ public:
       int n = lua_gettop(L);
       lua_pop(L, n);
     }
+
+	/**
+	 * Get a vector of ints from the lua script
+	 *
+	 * @param name	the name of the vector
+	 *
+	 * @return v	the values of the int vector
+	 **/
+	template<typename T>
+	std::vector<T> getVector(const std::string& vectorName) {
+		if(!L) {
+			printError(vectorName, "Script is not loaded");
+			return lua_getdefaultVector<T>();
+		}
+
+		lua_gettostack(vectorName.c_str());
+		if(lua_isnil(L, -1)) { // array is not found
+			printError(vectorName, "Vector is not found");
+			return lua_getdefaultVector<T>();
+		}
+		lua_pushnil(L);
+		vector<T> result = lua_getVector<T>(vectorName);
+		clean();
+
+		return result;
+	}
 
 	/**
 	 * Get a variable out of the Lua Script
@@ -113,7 +140,7 @@ public:
     }
 		
     /**
-	 * Generic get
+	 * Generic get for variables
 	 **/
     template<typename T>
     T lua_get(const std::string& variableName) {
@@ -121,11 +148,27 @@ public:
     }
 
 	/**
-	 * Failure case get
+	 * Failure case get for variables
 	 **/
     template<typename T>
     T lua_getdefault() {
       return 0;
+    }
+
+	/**
+	 * Generic get for vectors
+	 **/
+    template<typename T>
+    std::vector<T> lua_getVector(const std::string& vectorName) {
+      return vector<T>();
+    }
+
+	/**
+	 * Failure case get for vectors
+	 **/
+    template<typename T>
+    std::vector<T> lua_getdefaultVector() {
+      return std::vector<T>();
     }
 
 	Status getStatus()
@@ -143,6 +186,8 @@ public:
 		return filename.substr(12, filename.length() - 16);
 	}
    
+	void infiniteRun();
+
 private:
 	lua_State* L;
     std::string filename;
@@ -190,6 +235,64 @@ inline std::string LuaScript::lua_get<std::string>(const std::string& variableNa
 template<>
 inline std::string LuaScript::lua_getdefault<std::string>() {
   return "null";
+}
+
+ // Specializations for vectors
+
+template <> 
+inline std::vector<bool> LuaScript::lua_getVector<bool>(const std::string& vectorName) {
+	std::vector<bool> v;
+    while(lua_next(L, -2)) { 
+		if(!lua_isboolean(L, -1))
+			printError(vectorName, "Not a boolean");
+		else
+		   v.push_back((bool)lua_toboolean(L, -1));
+        lua_pop(L, 1);
+    }
+
+    return v;
+}
+
+template <> 
+inline std::vector<float> LuaScript::lua_getVector<float>(const std::string& vectorName) {
+	std::vector<float> v;
+    while(lua_next(L, -2)) { 
+		 if(!lua_isnumber(L, -1)) 
+			printError(vectorName, "Not a number");
+		 else
+			v.push_back((float)lua_tonumber(L, -1));
+        lua_pop(L, 1);
+    }
+
+    return v;
+}
+
+template <>
+inline std::vector<int> LuaScript::lua_getVector<int>(const std::string& vectorName) {
+   std::vector<int> v;
+    while(lua_next(L, -2)) { 
+		 if(!lua_isnumber(L, -1)) 
+			printError(vectorName, "Not a number");
+		 else
+			v.push_back((int)lua_tonumber(L, -1));
+        lua_pop(L, 1);
+    }
+
+    return v;
+}
+
+template <>
+inline std::vector<std::string> LuaScript::lua_getVector<std::string>(const std::string& vectorName) {
+	std::vector<std::string> v;
+    while(lua_next(L, -2)) {
+		 if(!lua_isstring(L, -1)) 
+			printError(vectorName, "Not a string");
+		 else
+			v.push_back(std::string(lua_tostring(L, -1)));
+        lua_pop(L, 1);
+    }
+    clean();
+    return v;
 }
 
 #endif

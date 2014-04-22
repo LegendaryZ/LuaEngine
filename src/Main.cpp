@@ -6,7 +6,6 @@
 #include <string>
 #include <stdarg.h>
 
-
 using namespace std;
 
 /**
@@ -14,9 +13,9 @@ using namespace std;
  **/
 void testPlayerScript()
 {
-	printf("\n===============================================================\n");
-	printf("Test LuaScript\n");
-	printf("===============================================================\n\n");
+	printf("=====================================================\n");
+	printf("              Test player Script                     \n");
+	printf("=====================================================\n\n");
 
 	LuaScript* luaScript = ScriptManager::getInstance()->getScript(string("player"));
 	if(luaScript)
@@ -31,10 +30,30 @@ void testPlayerScript()
 		std::cout<<"HP:"<<hp<<std::endl;
 
 		// getting arrays
-		std::vector<int> v = luaScript->getIntVector("array");
+		std::vector<int> v = luaScript->getVector<int>("array");
 		std::cout<<"Contents of array:";
 		for(std::vector<int>::iterator it = v.begin();
 			it != v.end();
+			it++) {
+			std::cout<<*it<<",";
+		}
+		std::cout<<std::endl;
+
+		// getting arrays
+		std::vector<std::string> v2 = luaScript->getVector<std::string>("inv");
+		std::cout<<"Contents of inv:";
+		for(std::vector<std::string>::iterator it = v2.begin();
+			it != v2.end();
+			it++) {
+			std::cout<<*it<<",";
+		}
+		std::cout<<std::endl;
+
+		// getting arrays
+		std::vector<bool> v3 = luaScript->getVector<bool>("boolArray");
+		std::cout<<"Contents of boolArray:";
+		for(std::vector<bool>::iterator it = v3.begin();
+			it != v3.end();
 			it++) {
 			std::cout<<*it<<",";
 		}
@@ -60,14 +79,17 @@ void testPlayerScript()
 int main()
 {
 	ScriptManager::getInstance()->loadScripts("src\\Scripts\\*");
-	
-	map<string, LuaScript*>::iterator scriptItr = ScriptManager::getInstance()->getScripts().begin();
 
+	testPlayerScript();
+	
+	/*
+	map<string, LuaScript*>::iterator scriptItr = ScriptManager::getInstance()->getScripts().begin();
+	
 	//Run all scripts
 	for(scriptItr; scriptItr != ScriptManager::getInstance()->getScripts().end(); scriptItr++)
-		ThreadManager::getInstance()->registerThread(scriptItr->second);
-
-
+		scriptItr->second->infiniteRun();
+	*/
+	
 	printf("\n\n");
 	system("PAUSE");
 	return 0;
