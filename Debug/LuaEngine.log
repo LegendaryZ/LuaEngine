@@ -1,4 +1,4 @@
-﻿Build started 4/21/2014 8:23:12 PM.
+﻿Build started 4/23/2014 6:43:15 PM.
      1>Project "C:\Users\Jason\Documents\LuaEngine\LuaEngine.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ILua\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt src\Main.cpp
@@ -6,7 +6,10 @@
      1>c:\users\jason\documents\luaengine\src\luascript.h(205): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
      1>c:\users\jason\documents\luaengine\src\luascript.h(249): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Jason\Documents\LuaEngine\Debug\LuaEngine.exe" /INCREMENTAL /NOLOGO /LIBPATH:Lua\lib lua51.lib lua5.1.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Jason\Documents\LuaEngine\Debug\LuaEngine.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Jason\Documents\LuaEngine\Debug\LuaEngine.lib" /MACHINE:X86 Debug\GameObject.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Jason\Documents\LuaEngine\Debug\LuaEngine.exe" /INCREMENTAL /NOLOGO /LIBPATH:Lua\lib lua51.lib lua5.1.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Jason\Documents\LuaEngine\Debug\LuaEngine.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Jason\Documents\LuaEngine\Debug\LuaEngine.lib" /MACHINE:X86 Debug\ScriptComponent.obj
+         Debug\Component.obj
+         Debug\Scene.obj
+         Debug\GameObject.obj
          Debug\LuaScript.obj
          Debug\Main.obj
          Debug\ScriptManager.obj
@@ -16,4 +19,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.26
+Time Elapsed 00:00:01.94

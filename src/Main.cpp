@@ -2,6 +2,10 @@
 #include "ScriptManager.h"
 #include "ThreadManager.h"
 #include "Helper.h"
+#include "Scene.h"
+#include "GameObject.h"
+#include "Component.h"
+#include "ScriptComponent.h"
 #include <iostream>
 #include <string>
 #include <stdarg.h>
@@ -76,19 +80,51 @@ void testPlayerScript()
 	}
 }
 
+void loadPrefabs(Scene* scene)
+{
+	LuaScript* prefabs = ScriptManager::getInstance()->getScript(string("prefabs"));
+
+	int id = prefabs->get<int>("player.id");
+	std::string script = prefabs->get<std::string>("player.script");
+	GameObject player(id);
+	Component* luaScriptComp = new ScriptComponent(ScriptManager::getInstance()->getScript(script));
+	player.addComponent(GameObject::ComponentType::LuaScript, luaScriptComp);
+	
+	int id2 = prefabs->get<int>("player2.id");
+	std::string script2 = prefabs->get<std::string>("player2.script");
+	GameObject player2(id2);
+	//player2.addComponent(GameObject::ComponentType::LuaScript, new ScriptComponent(ScriptManager::getInstance()->getScript(script2)));
+
+	if(scene->addGameObject(player))
+		printf("1");
+	if(scene->addGameObject(player2))
+		printf("2");
+}
+
 int main()
 {
-	ScriptManager::getInstance()->loadScripts("src\\Scripts\\*");
+	ScriptManager::getInstance()->loadScripts("Scripts\\*");
 
-	testPlayerScript();
-	
-	/*
+	Scene scene;
+	printf("Loading Prefabs...");
+	//loadPrefabs(&scene);
+	//printf("Done!\n");
+
+	LuaScript* prefabs = ScriptManager::getInstance()->getScript(string("prefabs"));
+
+	int id = prefabs->get<int>("player.id");
+	std::string script = prefabs->get<std::string>("player.script");
+	GameObject player(id);
+	Component* luaScriptComp = new ScriptComponent(ScriptManager::getInstance()->getScript(script));
+	player.addComponent(GameObject::ComponentType::LuaScript, luaScriptComp);
+
+	player.update();
 	map<string, LuaScript*>::iterator scriptItr = ScriptManager::getInstance()->getScripts().begin();
 	
 	//Run all scripts
 	for(scriptItr; scriptItr != ScriptManager::getInstance()->getScripts().end(); scriptItr++)
 		scriptItr->second->infiniteRun();
-	*/
+	
 	
 	printf("\n\n");
 	system("PAUSE");
