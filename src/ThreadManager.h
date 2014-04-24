@@ -18,7 +18,7 @@ public:
 	~ThreadManager(void);
 
 	void asyncTask(std::function<void (void)> f);
-
+	void joinAll();
 private:
 	//variables
 	vector<std::thread> threads;	

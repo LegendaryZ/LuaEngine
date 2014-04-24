@@ -11,6 +11,7 @@ public:
 	ScriptComponent(LuaScript* script);
 	~ScriptComponent(void);
 
+	virtual void addedToGameObject(GameObject* gameObject);
 private:
 	LuaScript* script;
 };

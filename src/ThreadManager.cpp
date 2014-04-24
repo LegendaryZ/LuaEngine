@@ -24,6 +24,14 @@ ThreadManager::~ThreadManager(void)
  **/
 void ThreadManager::asyncTask(std::function<void (void)> f)
 {
-	thread task(f);
-	task.detach();
+	threads.push_back(thread(f));
+}
+
+void ThreadManager::joinAll()
+{
+	for(int i = 0; i < threads.size();i++)
+	{
+		if(threads[i].joinable())
+			threads[i].join();
+	}
 }

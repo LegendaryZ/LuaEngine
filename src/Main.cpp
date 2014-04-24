@@ -93,7 +93,7 @@ void loadPrefabs(Scene* scene)
 	int id2 = prefabs->get<int>("player2.id");
 	std::string script2 = prefabs->get<std::string>("player2.script");
 	GameObject player2(id2);
-	//player2.addComponent(GameObject::ComponentType::LuaScript, new ScriptComponent(ScriptManager::getInstance()->getScript(script2)));
+	player2.addComponent(GameObject::ComponentType::LuaScript, new ScriptComponent(ScriptManager::getInstance()->getScript(script2)));
 
 	if(scene->addGameObject(player))
 		printf("1");
@@ -105,28 +105,33 @@ int main()
 {
 	ScriptManager::getInstance()->loadScripts("Scripts\\*");
 
+	/*
 	Scene scene;
 	printf("Loading Prefabs...");
-	//loadPrefabs(&scene);
-	//printf("Done!\n");
-
+	loadPrefabs(&scene); //For some reason causes the program to stall
+	printf("Done!\n");
+	*/
+	testPlayerScript();
 	LuaScript* prefabs = ScriptManager::getInstance()->getScript(string("prefabs"));
 
 	int id = prefabs->get<int>("player.id");
 	std::string script = prefabs->get<std::string>("player.script");
 	GameObject player(id);
-	Component* luaScriptComp = new ScriptComponent(ScriptManager::getInstance()->getScript(script));
+	ScriptComponent* luaScriptComp = new ScriptComponent(ScriptManager::getInstance()->getScript(script));
 	player.addComponent(GameObject::ComponentType::LuaScript, luaScriptComp);
 
-	player.update();
-	map<string, LuaScript*>::iterator scriptItr = ScriptManager::getInstance()->getScripts().begin();
-	
-	//Run all scripts
-	for(scriptItr; scriptItr != ScriptManager::getInstance()->getScripts().end(); scriptItr++)
-		scriptItr->second->infiniteRun();
-	
-	
-	printf("\n\n");
+	ScriptManager::getInstance()->getScript(std::string("player"))->infiniteRun();
+	ScriptManager::getInstance()->getScript(std::string("luascript"))->infiniteRun();
+
+	bool quit = false;
+	while(!quit)
+	{
+		quit = player.update();
+	}
+
+	ThreadManager::getInstance()->joinAll();
+
+	printf("\nEnded Main loop\n");
 	system("PAUSE");
 	return 0;
 }

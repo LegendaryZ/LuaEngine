@@ -1,4 +1,7 @@
 #pragma once
+
+class GameObject;
+
 class Component
 {
 public:
@@ -6,5 +9,7 @@ public:
 
 	Component(void);
 	~Component(void);
+
+	virtual void addedToGameObject(GameObject* gameObject);
 };
 

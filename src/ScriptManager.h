@@ -49,7 +49,10 @@ extern "C" {
 	  filename = luaL_checklstring(L, 1, &filenameLength);
 
 	  if(L == ScriptManager::getInstance()->getScript(std::string(filename))->getLuaState())
+	  {
+		  printf("\nKilled %s\n", filename);
 		  ScriptManager::getInstance()->getScript(std::string(filename))->setStatus(LuaScript::Status::Dead);
+	  }
 	  else
 		  printf("A script cannot kill other scripts");
 	  return 0;

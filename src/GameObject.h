@@ -16,7 +16,7 @@ public:
 	GameObject(int id);
 	~GameObject(void);
 
-	void update();
+	bool update();
 
 	bool addComponent(ComponentType type, Component* component, bool replaceExisting = false);
 

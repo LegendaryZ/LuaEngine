@@ -16,9 +16,14 @@ GameObject::~GameObject(void)
 	components.clear();
 }
 
-void GameObject::update()
+int count = 0;
+bool GameObject::update()
 {
-	printf("GameObject says hello!");
+	printf("\nupdate gameobject\n");
+	count++;
+	if(count >= 5)
+		return true;
+	return false;
 }
 
 bool GameObject::addComponent(ComponentType type, Component* component, bool replaceExisting)
@@ -26,16 +31,16 @@ bool GameObject::addComponent(ComponentType type, Component* component, bool rep
 	std::map<ComponentType, Component*>::iterator itr = components.find(type);
 	if(itr == components.end())
 	{
-		component->gameObjectID = id;
 		components.insert(std::pair<ComponentType, Component*>(type, component));
+		component->addedToGameObject(this);
 		return true;
 	}
 	else if(replaceExisting)
 	{
 		delete itr->second;
 		components.erase(itr);
-		component->gameObjectID = id;
 		components.insert(std::pair<ComponentType, Component*>(type, component));
+		component->addedToGameObject(this);
 		return true;
 	}
 	return false;

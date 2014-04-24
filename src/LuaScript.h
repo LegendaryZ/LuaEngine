@@ -100,6 +100,17 @@ public:
       clean();
       return result;
     }
+	
+	template<typename T>
+	void set(const std::string& variableName, T value)
+	{
+		if(!L) {
+			printError(variableName, "Script is not loaded");
+		}
+		if(lua_gettostack(variableName)) {//variable succesfully on top of stack
+			lua_set<T>(variableName, value);
+		}
+	}
 
 	/**
 	 * put the variable on top of the stack
@@ -154,6 +165,10 @@ public:
     T lua_getdefault() {
       return 0;
     }
+
+	template<typename T>
+	void lua_set(const std::string& variableName, T value){
+	}
 
 	/**
 	 * Generic get for vectors
@@ -235,6 +250,32 @@ inline std::string LuaScript::lua_get<std::string>(const std::string& variableNa
 template<>
 inline std::string LuaScript::lua_getdefault<std::string>() {
   return "null";
+}
+
+// Specializations for lua set
+
+template <> 
+inline void LuaScript::lua_set<bool>(const std::string& variableName, bool value) {
+	lua_pushboolean(L, value);
+	lua_setglobal(L, variableName.c_str());
+}
+
+template <> 
+inline void LuaScript::lua_set<float>(const std::string& variableName, float value) {
+	lua_pushnumber(L, value);
+	lua_setglobal(L, variableName.c_str());
+}
+
+template <>
+inline void LuaScript::lua_set<int>(const std::string& variableName, int value) {
+    lua_pushnumber(L, value);
+	lua_setglobal(L, variableName.c_str());
+}
+
+template <>
+inline void LuaScript::lua_set<std::string>(const std::string& variableName, std::string value) {
+	lua_pushstring(L, value.c_str());
+	lua_setglobal(L, variableName.c_str());
 }
 
  // Specializations for vectors
